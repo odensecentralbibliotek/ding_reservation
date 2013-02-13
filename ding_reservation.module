@@ -43,6 +43,14 @@ function ding_reservation_menu() {
     'access arguments' => array(1),
   );
   
+  $items['admin/config/ding/reservation'] = array(
+    'title' => 'Ding reservation',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ding_reservation_admin_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'ding_reservation.admin.inc',
+  );
+
   return $items;
 }
 
@@ -721,7 +729,7 @@ function ding_reservation_interest_period_selector($type, $name, $default, $opti
  */
 function ding_reservation_default_options_branch_validate($type, $name, $default, $values) {
   if (empty($values[$name])) {
-    if ($type == 'create' && empty($default)) {
+    if ($type == 'create' && (empty($default) || variable_get('ding_reservation_always_choose_pickup', FALSE))) {
       $result['openruth_preferred_branch'] = array(
         '#error' => 'You must select a branch',
       );
