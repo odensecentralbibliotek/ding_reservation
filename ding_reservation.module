@@ -253,8 +253,8 @@ function ding_reservation_reserve_form_callback($form, &$form_state) {
   }
 
   $response['#commands'][] = ajax_command_ding_popup('ding_reservation', t('Reserve'), $html);
-  //update amount. Remember to add .amount div { display: inline} in your theme because ajax_command_html adds divs.
-  $response['#commands'][] = ajax_command_html('#ding-user-reservation-amount .amount', '(' . count(ding_provider_invoke_page('reservation', 'list', $user)) . ')');
+  //update amount.
+  $response['#commands'][] = ajax_command_html('#ding-user-reservation-amount .amount', '<span>(' . count(ding_provider_invoke_page('reservation', 'list', $user)) . ')</span>');
  
   return $response;
 }
