@@ -6,7 +6,7 @@
  */
 
 // Default interest period is ~six months.
-define('DING_RESERVATION_DEFAULT_INTEREST_PERIOD', 183 * 86400);
+define('DING_RESERVATION_DEFAULT_INTEREST_PERIOD', 90 * 86400);
 
 /**
  * Implements hook_ctools_plugin_directory().
