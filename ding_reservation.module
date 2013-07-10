@@ -34,7 +34,7 @@ function ding_reservation_menu() {
     'access callback' => 'ding_reservation_access',
     'access arguments' => array(1),
   );
-  
+
   $items['user/%user/status/reservations/delete/%'] = array(
     'title' => 'Delete reservations',
     'page callback' => 'drupal_get_form',
@@ -42,7 +42,7 @@ function ding_reservation_menu() {
     'access callback' => 'ding_reservation_access',
     'access arguments' => array(1),
   );
-  
+
   $items['admin/config/ding/reservation'] = array(
     'title' => 'Ding reservation',
     'page callback' => 'drupal_get_form',
@@ -260,6 +260,8 @@ function ding_reservation_reserve_form_callback($form, &$form_state) {
   }
 
   $response['#commands'][] = ajax_command_ding_popup('ding_reservation', t('Reserve'), $html);
+  $response['#commands'][] = ajax_command_append('.messages',
+      '<div><button class="btn message-btn" onclick="window.location.reload(true)">' . t("Ok") . '</button></div>');
 
   return $response;
 }
@@ -525,11 +527,11 @@ function ding_reservation_delete_reservations_form($form, $form_state, $account,
     '#type' => 'value',
     '#value' => $ids,
   );
-  
+
   $form['confirm_text'] = array(
     '#markup' => '<div>' . t('Are you sure you want to delete these reservations?') . '</div>',
   );
-  
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#submit' => array('ding_reservation_delete_reservations_form_submit'),
@@ -540,14 +542,11 @@ function ding_reservation_delete_reservations_form($form, $form_state, $account,
     '#value' => t('Yes'),
     '#name' => 'delete_reservations',
   );
-  
+
   $form['cancel'] = array(
-    '#type' => 'link',
-    '#title' => t('Cancel'), 
-    '#href' => 'user/' . $user->uid . '/status/reservations',
-    '#value' => t('Cancel'),
+    '#markup' => '<input type="button" onclick="location.href=\'user/' . $user->uid . '/status/reservations\'; return false;" value="' . t("Cancel") . '" />',
   );
-  
+
   return $form;
 }
 
