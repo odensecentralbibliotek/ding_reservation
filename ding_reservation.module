@@ -6,7 +6,7 @@
  */
 
 // Default interest period is ~six months.
-define('DING_RESERVATION_DEFAULT_INTEREST_PERIOD', 183 * 86400);
+define('DING_RESERVATION_DEFAULT_INTEREST_PERIOD', 90 * 86400);
 
 /**
  * Implements hook_ctools_plugin_directory().
@@ -300,9 +300,21 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
     $pickup_branch = ding_provider_invoke('reservation', 'branch_name', $item->pickup_branch_id);
     switch ($type) {
     case 'ready_for_pickup':
+    //Check if remote loan then get title.
+    if ($entity == FALSE) {
+      $ding_entity_id = explode(":", $item->ding_entity_id);
+      $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
+        $details = $result[$ding_entity_id[1]];
+        if (isset($details['title'])) {
+          $title = array('#markup' =>'<h2>' . $details['title'] . '</h2>');
+        }
+    }
+    else {
+      $title = array('#markup' => $item->display_name);
+    }
       $options[$item->id] = array(
         'title' => array(
-          'data' => array($entity ? ting_object_view($entity, 'user_list') : array('#markup' => $item->display_name)),
+          'data' => array($entity ? ting_object_view($entity, 'user_list') : $title),
           'class' => 'title',
         ),
         'created' => array(
@@ -355,9 +367,21 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
       );
       break;
     case 'not_ready_for_pickup':
+      //Check if remote loan then get title.
+    if ($entity == FALSE) {
+      $ding_entity_id = explode(":", $item->ding_entity_id);
+      $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
+        $details = $result[$ding_entity_id[1]];
+        if (isset($details['title'])) {
+          $title = array('#markup' =>'<h2>' . $details['title'] . '</h2>');
+        }
+    }
+    else {
+      $title = array('#markup' => $item->display_name);
+    }
       $options[$item->id] = array(
         'title' => array(
-          'data' => array($entity ? ting_object_view($entity, 'user_list') : array('#markup' => $item->display_name)),
+          'data' => array($entity ? ting_object_view($entity, 'user_list') : $title),
           'class' => 'title',
         ),
         'created' => array(
