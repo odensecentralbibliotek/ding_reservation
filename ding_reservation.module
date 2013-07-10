@@ -544,7 +544,7 @@ function ding_reservation_delete_reservations_form($form, $form_state, $account,
   );
 
   $form['cancel'] = array(
-    '#markup' => '<input type="button" onclick="location.href=\'user/' . $user->uid . '/status/reservations\'; return false;" value="' . t("Cancel") . '" />',
+    '#markup' => '<input type="button" onclick="location.href=\'/user/' . $user->uid . '/status/reservations\'; return false;" value="' . t("Cancel") . '" />',
   );
 
   return $form;
