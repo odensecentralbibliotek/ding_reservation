@@ -276,6 +276,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
     case 'ready_for_pickup':
       $header = array(
         'title' => t('Title'),
+        'notes' => t('periodical'),
         'created' => t('Created date'),
         'pickup_date' => t('Pickup date'),
         'pickup_branch' => t('Pickup branch'),
@@ -286,6 +287,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
     case 'not_ready_for_pickup':
       $header = array(
         'title' => t('Title'),
+        'notes' => t('periodical'),
         'created' => t('Created date'),
         'expiry' => t('Expiry date'),
         'pickup_branch' => t('Pickup branch'),
@@ -300,22 +302,32 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
     $pickup_branch = ding_provider_invoke('reservation', 'branch_name', $item->pickup_branch_id);
     switch ($type) {
     case 'ready_for_pickup':
-    //Check if remote loan then get title.
-    if ($entity == FALSE) {
-      $ding_entity_id = explode(":", $item->ding_entity_id);
-      $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
-        $details = $result[$ding_entity_id[1]];
-        if (isset($details['title'])) {
+     //Check if remote loan then get title.
+        if ($entity == FALSE) {
+          $ding_entity_id = explode(":", $item->ding_entity_id);
+          $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
+          $details = $result[$ding_entity_id[1]];      
+          if (isset($details['title'])) {
           $title = array('#markup' =>'<h2>' . $details['title'] . '</h2>');
+          }
         }
-    }
-    else {
-      $title = array('#markup' => $item->display_name);
-    }
+        elseif ($item->entity->type == 'Tidsskrift') {
+          $creds = ding_user_get_creds();
+          $notes = alma_client_invoke('get_reservations', $creds['name'], $creds['pass']);
+          $res   = $notes[$item->id];
+          $title = array('#markup' => $item->display_name);
+        }
+        else {
+          $title = array('#markup' => $item->display_name);
+        }
       $options[$item->id] = array(
         'title' => array(
           'data' => array($entity ? ting_object_view($entity, 'user_list') : $title),
           'class' => 'title',
+        ),
+        'notes' => array(
+          'data' => $res['notes'] ? check_plain($res['notes']) : '',
+          'class' => 'notes',
         ),
         'created' => array(
           'data' => $item->created ? format_date(strtotime(check_plain($item->created)), 'date_only') : '',
@@ -367,23 +379,33 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
       );
       break;
     case 'not_ready_for_pickup':
-      //Check if remote loan then get title.
-    if ($entity == FALSE) {
-      $ding_entity_id = explode(":", $item->ding_entity_id);
-      $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
-        $details = $result[$ding_entity_id[1]];
-        if (isset($details['title'])) {
+     //Check if remote loan then get title.
+        if ($entity == FALSE) {
+          $ding_entity_id = explode(":", $item->ding_entity_id);
+          $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
+          $details = $result[$ding_entity_id[1]];      
+          if (isset($details['title'])) {
           $title = array('#markup' =>'<h2>' . $details['title'] . '</h2>');
+          }
         }
-    }
-    else {
-      $title = array('#markup' => $item->display_name);
-    }
+        elseif ($item->entity->type == 'Tidsskrift') {
+          $creds = ding_user_get_creds();
+          $notes = alma_client_invoke('get_reservations', $creds['name'], $creds['pass']);
+          $res   = $notes[$item->id];
+          $title = array('#markup' => $item->display_name );
+        }
+        else {
+          $title = array('#markup' => $item->display_name);
+        }
       $options[$item->id] = array(
         'title' => array(
           'data' => array($entity ? ting_object_view($entity, 'user_list') : $title),
           'class' => 'title',
         ),
+        'notes' => array(
+          'data' => $res['notes'] ? check_plain($res['notes']) : '',
+          'class' => 'notes',
+        ),       
         'created' => array(
           'data' => $item->created ? format_date(strtotime(check_plain($item->created)), 'date_only') : '',
           'class' => 'created-date',
