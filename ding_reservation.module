@@ -311,7 +311,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
           $title = array('#markup' =>'<h2>' . $details['title'] . '</h2>');
           }
         }
-        elseif ($item->entity->type == 'Tidsskrift') {
+         elseif ($item->entity->type == 'Tidsskrift') {
           $creds = ding_user_get_creds();
           $notes = alma_client_invoke('get_reservations', $creds['name'], $creds['pass']);
           $res   = $notes[$item->id];
@@ -379,6 +379,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
       );
       break;
     case 'not_ready_for_pickup':
+      $res = array();
      //Check if remote loan then get title.
         if ($entity == FALSE) {
           $ding_entity_id = explode(":", $item->ding_entity_id);
@@ -401,7 +402,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
         'title' => array(
           'data' => array($entity ? ting_object_view($entity, 'user_list') : $title),
           'class' => 'title',
-        ),
+        ),      
         'notes' => array(
           'data' => $res['notes'] ? check_plain($res['notes']) : '',
           'class' => 'notes',
