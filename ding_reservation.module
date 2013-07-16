@@ -270,6 +270,8 @@ function ding_reservation_reserve_form_callback($form, &$form_state) {
  * Show a reservation list form.
  */
 function ding_reservation_reservations_form($form, &$form_state, $items = array(), $type = 'not_ready_for_pickup') {
+  drupal_add_library('system', 'ui.dialog');
+  drupal_add_js(drupal_get_path('module', 'ding_reservation') . '/ding_reservation.js');
   $options = array();
   $destination = drupal_get_destination();
   switch ($type) {
@@ -344,13 +346,16 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
         'operations' => array(
           'data' =>  array(
             '#prefix' => '<div class="delete-reservation">',
-            '#suffix' => '</div>',
+            '#suffix' => '</div><div id="reservation-delete-confirm-ready-branch"></div>',
             '#type' => 'submit',
             '#submit' => array('ding_reservation_reservation_delete_submit'),
             '#reservation_id' => $item->id,
             '#name' => 'delete-' . preg_replace('/\W/', '-', $item->id), // Need this for formAPI can tell buttons apart
             '#value' => t('Delete'),
             '#options' => array('query' => $destination),
+            '#attributes' => array(
+              'onclick' => "Drupal.ding_reservation.delete_confirm(event, 1)"
+            ),
           ),
           'class' => 'operations',
         ),
@@ -424,14 +429,17 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
           'class' => 'queue-number',
         ),
         'operations' => array(
-          'data' =>  array(
+          'data' => array(
             '#prefix' => '<div class="delete-reservation">',
-            '#suffix' => '</div>',
+            '#suffix' => '</div><div id="reservation-delete-confirm-not-ready-branch"></div>',
             '#type' => 'submit',
             '#submit' => array('ding_reservation_reservation_delete_submit'),
             '#reservation_id' => $item->id,
             '#name' => 'delete-' . preg_replace('/\W/', '-', $item->id), // Need this for formAPI can tell buttons apart
             '#value' => t('Delete'),
+            '#attributes' => array(
+              'onclick' => 'Drupal.ding_reservation.delete_confirm(event, 0)'
+            ),
             '#options' => array('query' => $destination),
           ),
           'class' => 'operations',
