@@ -315,8 +315,8 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
           }
         }
          elseif ($item->entity->type == 'Tidsskrift') {
-          $creds = ding_user_get_creds();
-          $notes = alma_client_invoke('get_reservations', $creds['name'], $creds['pass']);
+          global $user;
+          $notes = ding_provider_invoke('reservation', 'get_reservations', $user);
           $res   = $notes[$item->id];
           $title = array('#markup' => $item->display_name);
         }
@@ -396,10 +396,10 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
           }
         }
         elseif ($item->entity->type == 'Tidsskrift') {
-          $creds = ding_user_get_creds();
-          $notes = alma_client_invoke('get_reservations', $creds['name'], $creds['pass']);
+          global $user;
+          $notes = ding_provider_invoke('reservation', 'get_reservations', $user);
           $res   = $notes[$item->id];
-          $title = array('#markup' => $item->display_name );
+           $title = array('#markup' => $item->display_name );
         }
         else {
           $title = array('#markup' => $item->display_name);
