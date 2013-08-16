@@ -1,16 +1,13 @@
 (function ($) {
   Drupal.ding_reservation = {};
-  Drupal.ding_reservation.delete_confirm = function(event, ready) {
+  Drupal.ding_reservation.delete_confirm = function (event, ready, del_id) {
     event.preventDefault();
     var id = "";
-    var form_id = "";
     if(ready) {
       id = "reservation-delete-confirm-ready-branch";
-      form_id = "ding-reservation-reservations-ready-form";
     }
     else {
       id = "reservation-delete-confirm-not-ready-branch";
-      form_id = "ding-reservation-reservations-notready-form";
     }
     $('#' + id).attr('title', Drupal.t("Delete reservation"))
     $('#' + id).html('<p>' + Drupal.t("Are you sure you want to remove this reservation?") + '</p>');
@@ -22,12 +19,12 @@
         text: dialog_yes,
         click: function() {
           $(this).dialog('close');
-          $("#" + form_id).submit();
+          $('input[name="delete-' + del_id + '"]').attr("onclick", "").trigger('click');
         }
       },
       {
         text: dialog_no,
-        click: function() {
+        click: function () {
           $(this).dialog('close');
           return false;
         }

@@ -355,7 +355,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
             '#value' => t('Delete'),
             '#options' => array('query' => $destination),
             '#attributes' => array(
-              'onclick' => "Drupal.ding_reservation.delete_confirm(event, 1)"
+              'onclick' => 'Drupal.ding_reservation.delete_confirm(event, 1, '.$item->id.')'
             ),
           ),
           'class' => 'operations',
@@ -439,7 +439,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
             '#name' => 'delete-' . preg_replace('/\W/', '-', $item->id), // Need this for formAPI can tell buttons apart
             '#value' => t('Delete'),
             '#attributes' => array(
-              'onclick' => 'Drupal.ding_reservation.delete_confirm(event, 0)'
+              'onclick' => 'Drupal.ding_reservation.delete_confirm(event, 0, '.$item->id.')'
             ),
             '#options' => array('query' => $destination),
           ),
