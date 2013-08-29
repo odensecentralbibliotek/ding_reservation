@@ -248,6 +248,7 @@ function ding_reservation_reserve_form_submit($form, &$form_state) {
  * Ajax callback.
  */
 function ding_reservation_reserve_form_callback($form, &$form_state) {
+  global $user; 
   $response = array(
     '#type' => 'ajax',
     '#commands' => array(),
@@ -263,6 +264,9 @@ function ding_reservation_reserve_form_callback($form, &$form_state) {
   $response['#commands'][] = ajax_command_append('.messages',
       '<div><button class="btn message-btn" onclick="jQuery(\'.ui-icon-closethick\').trigger(\'click\');">' . t("Ok") . '</button></div>');
 
+  //update amount.
+  $response['#commands'][] = ajax_command_html('#ding-user-reservation-amount .amount', '<span>(' . count(ding_provider_invoke_page('reservation', 'list', $user)) . ')</span>');
+   
   return $response;
 }
 
