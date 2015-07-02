@@ -373,12 +373,16 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
           '#suffix' => '</p>',
         );
       }
+       $form['help_text'] = array(
+        '#markup' => '<p>'.t('Hold Shift to select multiple sort criteria.').'</p>'
+      );
       $form['reservations'] = array(
         '#type' => 'tableselect_form',
         '#header' => $header,
         '#options' => $options,
         '#empty' => t('No reservations ready for pickup'),
       );
+      $form['reservations']['#attributes']['class'] = array('tablesorter');
       break;
     case 'not_ready_for_pickup':
       $res = NULL;
@@ -442,13 +446,16 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
           'class' => 'operations',
         ),
       );
-
+       $form['help_text'] = array(
+        '#markup' => '<p>'.t('Hold Shift to select multiple sort criteria.').'</p>'
+      );
       $form['reservations'] = array(
         '#type' => 'tableselect_form',
         '#header' => $header,
         '#options' => $options,
         '#empty' => t('No Reservations'),
       );
+      $form['reservations']['#attributes']['class'] = array('tablesorter');
       break;
     }
   }
