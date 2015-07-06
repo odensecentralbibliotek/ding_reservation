@@ -276,6 +276,7 @@ function ding_reservation_reserve_form_callback($form, &$form_state) {
 function ding_reservation_reservations_form($form, &$form_state, $items = array(), $type = 'not_ready_for_pickup') {
   drupal_add_library('system', 'ui.dialog');
   drupal_add_js(drupal_get_path('module', 'ding_reservation') . '/ding_reservation.js');
+  drupal_add_css(drupal_get_path('theme', 'latto_odense') .'/css/oc_tablesort.css'); //tablesort overwrites.
   $options = array();
   $destination = drupal_get_destination();
   switch ($type) {
