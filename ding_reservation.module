@@ -284,8 +284,8 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
       $header = array(
         'title' => t('Title'),
         'notes' => t('periodical'),
-        'created' => t('Created date'),
-        'pickup_date' => t('Pickup date'),
+        'created' => array('data' => t('Created date'),'class' => '{sorter: "ting_date_sort"}'),
+        'pickup_date' => array('data' => t('Pickup date'),'class' => '{sorter: "ting_date_sort"}'),
         'pickup_branch' => t('Pickup branch'),
         'operations' => '',
       );
@@ -295,8 +295,8 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
       $header = array(
         'title' => t('Title'),
         'notes' => t('periodical'),
-        'created' => t('Created date'),
-        'expiry' => t('Expiry date'),
+        'created' => array('data' => t('Created date'),'class' => '{sorter: "ting_date_sort"}'),
+        'expiry' => array('data' => t('Expiry date'),'class' => '{sorter: "ting_date_sort"}'),
         'pickup_branch' => t('Pickup branch'),
         'queue_number' => t('Queue number'),
         'operations' => '',
