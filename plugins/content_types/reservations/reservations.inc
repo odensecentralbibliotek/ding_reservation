@@ -26,7 +26,6 @@ function ding_reservation_reservations_content_type_render($subtype, $conf, $pan
   $block         = new stdClass();
   $block->module = 'ding_reservation';
   $block->delta  = 'reservations';
-
   switch ($conf['reservation_type_list']) {
     case 'ready_for_pickup':
       $block->title = t('Reservations ready for pickup');
@@ -59,6 +58,10 @@ function ding_reservation_reservations_content_type_render($subtype, $conf, $pan
     $preload_reservations = FALSE;
   }
   $block->content = count($reservation_list) == TRUE ? ding_provider_get_form($form_id, $reservation_list, $conf['reservation_type_list']) : $no_reservation_text;
+     /*
+    * Add JS
+    */
+  drupal_add_js(drupal_get_path('module', 'ding_reservation') . '/js/ding_reservation_attached.js');
   return $block;
 }
 

@@ -483,12 +483,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
       ),
     );
   }
-   /*
-    * Add JS
-    */
-    $form['#attached']['js'] = array(
-     drupal_get_path('module', 'ding_reservation') . '/js/ding_reservation_attached.js',
-    );
+
   
   return $form;
 }
