@@ -26,32 +26,49 @@ function ding_reservation_reservations_content_type_render($subtype, $conf, $pan
   $block         = new stdClass();
   $block->module = 'ding_reservation';
   $block->delta  = 'reservations';
+  
+  $list = ding_provider_invoke_page('reservation', 'list', $account);
+  
   switch ($conf['reservation_type_list']) {
     case 'ready_for_pickup':
       $block->title = t('Reservations ready for pickup');
       $no_reservation_text = t('There are no reservations ready for pickup.');
       $form_id = 'ding_reservation_reservations_ready_form';
+      
+      foreach ($list['DING_RESERVATION_READY'] as $item) {
+        if (isset($item->ding_entity_id)) {
+          $preload_ids[] = $item->ding_entity_id;
+        }
+        if (isset($conf['reservation_type_list'])) {
+          if ($conf['reservation_type_list'] == 'ready_for_pickup' && $item->ready_for_pickup == TRUE || $conf['reservation_type_list'] == 'not_ready_for_pickup' && $item->ready_for_pickup == FALSE) {
+            $reservation_list[] = $item;
+          }
+        }
+      }
+
     break;
     default:
     case 'not_ready_for_pickup':
       $block->title = t('Reservations');
       $no_reservation_text = t('There are no reservations.');
       $form_id = 'ding_reservation_reservations_notready_form';
+      
+      foreach ($list['DING_RESERVATION_NOT_READY'] as $item) {
+        if (isset($item->ding_entity_id)) {
+          $preload_ids[] = $item->ding_entity_id;
+        }
+        if (isset($conf['reservation_type_list'])) {
+          if ($conf['reservation_type_list'] == 'ready_for_pickup' && $item->ready_for_pickup == TRUE || $conf['reservation_type_list'] == 'not_ready_for_pickup' && $item->ready_for_pickup == FALSE) {
+            $reservation_list[] = $item;
+          }
+        }
+      }
     break;
   }
 
-  $list = ding_provider_invoke_page('reservation', 'list', $account);
+  
 
-  foreach ($list as $item) {
-    if (isset($item->ding_entity_id)) {
-      $preload_ids[] = $item->ding_entity_id;
-    }
-    if (isset($conf['reservation_type_list'])) {
-      if ($conf['reservation_type_list'] == 'ready_for_pickup' && $item->ready_for_pickup == TRUE || $conf['reservation_type_list'] == 'not_ready_for_pickup' && $item->ready_for_pickup == FALSE) {
-        $reservation_list[] = $item;
-      }
-    }
-  }
+  
   // Preload all ting objects.
   if ($preload_reservations) {
     ding_entity_load_multiple($preload_ids);
