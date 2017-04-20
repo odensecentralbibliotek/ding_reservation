@@ -150,7 +150,7 @@ function ding_reservation_reserve_form($form, &$form_state, $reservable, $hide_o
   $form_state['options_hidden'] = $hide_options;
 
   if (!$hide_options) {
-    if (ding_provider_implements('reservation', 'options') && $provider_form = ding_provider_invoke('reservation', 'options', 'create', $user, $reservable)) {
+    if (ding_provider_implements('reservation', 'options') && $provider_form = ding_provider_invoke('reservation', 'options', $user)) {
       $form['provider_options'] = $provider_form + array(
         '#tree' => TRUE,
       );
@@ -168,6 +168,7 @@ function ding_reservation_reserve_form($form, &$form_state, $reservable, $hide_o
 
   return $form;
 }
+
 
 /**
  * Form validation.
@@ -203,7 +204,6 @@ function ding_reservation_reserve_form_validate($form, &$form_state) {
     }
   }
 }
-
 /**
  * Form submission handler.
  */
@@ -266,8 +266,12 @@ function ding_reservation_reserve_form_callback($form, &$form_state) {
 
   //update amount.
   $tmp = ding_provider_invoke_page('reservation', 'list', $user);
-  
-  $response['#commands'][] = ajax_command_html('#ding-user-reservation-amount .amount', '<span>(' . count($tmp['DING_RESERVATION_READY']) . ')</span>');
+  $total_res_count = 0;
+  foreach($tmp as $arr)
+  {
+      $total_res_count += count($arr);
+  }
+  $response['#commands'][] = ajax_command_html('#ding-user-reservation-amount .amount', '<span>(' . $total_res_count . ')</span>');
    
   return $response;
 }
@@ -730,7 +734,9 @@ function ding_reservation_update_reservations_form_callback($form, &$form_state)
  */
 function ding_reservation_default_options_branch($type, $name, $default, $options) {
   $create = ($type == 'create');
+
   $allowed_branches = ($create ? array() : array('' => t('No change'))) + $options;
+  
   $default_value = $create ? $default : '';
   $form[$name] = array(
     '#type' => 'select',
