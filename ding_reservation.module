@@ -391,6 +391,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
       break;
     case 'not_ready_for_pickup':
       $res = NULL;
+      $title = null;
      //Check if remote loan then get title.
         if ($entity == FALSE) {
           $ding_entity_id = explode(":", $item->ding_entity_id);

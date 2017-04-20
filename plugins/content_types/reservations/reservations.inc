@@ -39,10 +39,8 @@ function ding_reservation_reservations_content_type_render($subtype, $conf, $pan
         if (isset($item->ding_entity_id)) {
           $preload_ids[] = $item->ding_entity_id;
         }
-        if (isset($conf['reservation_type_list'])) {
-          if ($conf['reservation_type_list'] == 'ready_for_pickup' && $item->ready_for_pickup == TRUE || $conf['reservation_type_list'] == 'not_ready_for_pickup' && $item->ready_for_pickup == FALSE) {
+        if (isset($conf['reservation_type_list'])) {   
             $reservation_list[] = $item;
-          }
         }
       }
 
@@ -58,9 +56,7 @@ function ding_reservation_reservations_content_type_render($subtype, $conf, $pan
           $preload_ids[] = $item->ding_entity_id;
         }
         if (isset($conf['reservation_type_list'])) {
-          if ($conf['reservation_type_list'] == 'ready_for_pickup' && $item->ready_for_pickup == TRUE || $conf['reservation_type_list'] == 'not_ready_for_pickup' && $item->ready_for_pickup == FALSE) {
             $reservation_list[] = $item;
-          }
         }
       }
     break;
