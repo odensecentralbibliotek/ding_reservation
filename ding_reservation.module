@@ -328,8 +328,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
         }
          elseif ($item->entity->type == 'Tidsskrift') {
           global $user;
-          $notes = ding_provider_invoke('reservation', 'get_reservations', $user);
-          $res   = $notes[$item->id];
+          $res   = $item->notes;
           $title = array('#markup' => $item->display_name);
         }
         else {
@@ -341,7 +340,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
           'class' => 'title',
         ),
         'notes' => array(
-          'data' => $res['notes'] ? check_plain($res['notes']) : '',
+          'data' => $res ? check_plain($res) : '',
           'class' => 'notes',
         ),
         'created' => array(
@@ -394,7 +393,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
       $res = NULL;
       $title = null;
      //Check if remote loan then get title.
-        if ($entity == FALSE) {
+        if ($entity == null) {
           $ding_entity_id = explode(":", $item->ding_entity_id);
           $result = ding_provider_invoke('availability', 'holdings', array($ding_entity_id[1]));
           $details = $result[$ding_entity_id[1]];      
@@ -402,7 +401,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
           $title = array('#markup' =>'<h2>' . $details['title'] . '</h2>');
           }
         }
-        elseif ($item->entity->type == 'Tidsskrift') {
+        elseif ($item->entity->type == FALSE) {
           global $user;
           //$notes = ding_provider_invoke('reservation', 'get_reservations', $user);
           $res   = array('notes' => $item->notes);
@@ -411,6 +410,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
         else {
           $title = array('#markup' => $item->display_name);
         }
+        $test = $entity->title;
       $options[$item->id] = array(
         'title' => array(
           'data' => array($entity ? ting_object_view($entity, 'user_list') : $title),
