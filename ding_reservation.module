@@ -401,7 +401,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
           $title = array('#markup' =>'<h2>' . $details['title'] . '</h2>');
           }
         }
-        elseif ($item->entity->type == FALSE) {
+        elseif ($item->entity->type == 'Tidsskrift') {
           global $user;
           //$notes = ding_provider_invoke('reservation', 'get_reservations', $user);
           $res   = array('notes' => $item->notes);
