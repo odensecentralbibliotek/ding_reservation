@@ -156,7 +156,20 @@ function ding_reservation_reserve_form($form, &$form_state, $reservable, $hide_o
       );
     }
   }
-
+  $State_array = null;
+  if(variable_get('oc_forced_interest_periode', 0))
+  {
+      $State_array = array(
+            'disabled' => array(
+              ':input[name="provider_options[interest_period]"]' => array('value' => ''),
+             )
+           );
+      $form['#attached']['css']['key'] = array(
+        'data' => '.form-item-provider-options-interest-period label{color:red;}',
+        'type' => 'inline',
+      );
+  }
+  $state_array = array();
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Reserve'),
@@ -164,8 +177,10 @@ function ding_reservation_reserve_form($form, &$form_state, $reservable, $hide_o
       'callback' => 'ding_reservation_reserve_form_callback',
       'wrapper' => 'ding-reservation-reserve-form',
     ),
+    '#states' => $State_array
   );
-
+  
+  
   return $form;
 }
 
@@ -763,12 +778,24 @@ function ding_reservation_default_options_branch($type, $name, $default, $option
 function ding_reservation_interest_period_selector($type, $name, $default, $options) {
   $create = ($type == 'create');
   $allowed_periods = ($create ? array() : array('' => t('No change'))) + $options;
+  /*
+   * Add select none to use default in library system.
+   */
+  $required = FALSE;
+  if(variable_get('oc_forced_interest_periode', 0))
+  {
+    $select_none = array('' => 'Vælg Periode');
+    $allowed_periods = $select_none+ $allowed_periods;
+    $default = '';
+    $required = TRUE;
+  }
   // $default_value = $create ? $default : '';
   $form[$name] = array(
     '#type' => 'select',
     '#title' => t('Select interest period'),
     '#options' => $allowed_periods,
     '#default_value' => $default,
+    '#required' => $required,
   );
   if ($create) {
     $form[$name . 'description'] = array(
