@@ -419,6 +419,10 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
           if (isset($details['title'])) {
           $title = array('#markup' =>'<h2>' . $details['title'] . '</h2>');
           }
+          else
+          {
+              $title = array('#markup' => $item->display_name);
+          }
         }
         elseif ($item->entity->type == 'Tidsskrift') {
           global $user;
