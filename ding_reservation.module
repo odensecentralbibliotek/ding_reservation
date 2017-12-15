@@ -433,7 +433,7 @@ function ding_reservation_reservations_form($form, &$form_state, $items = array(
         else {
           $title = array('#markup' => $item->display_name);
         }
-        $test = $entity->title;
+        //$test = $entity->title;
       $options[$item->id] = array(
         'title' => array(
           'data' => array($entity ? ting_object_view($entity, 'user_list') : $title),
