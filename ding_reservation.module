@@ -585,12 +585,16 @@ function ding_reservation_updates_form_callback($form, &$form_state) {
     '#type' => 'ajax',
     '#commands' => array(),
   );
-
+  $refresh = true;
+  if($form_state['encoded_reservations'] == "")
+  {
+      $refresh = false;
+  }
   $html = theme('status_messages');
   $html .= drupal_render(drupal_get_form('ding_reservation_update_reservations_form', $user, $form_state['encoded_reservations']));
 
   if ($html) {
-    $response['#commands'][] = ajax_command_ding_popup('ding_reservation', t('Update reservations'), $html, array('refresh' => TRUE));
+    $response['#commands'][] = ajax_command_ding_popup('ding_reservation', t('Update reservations'), $html, array('refresh' => $refresh));
   }
   return $response;
 }
@@ -635,7 +639,24 @@ function ding_reservation_delete_reservations_form($form, $form_state, $account,
  * Update reservations form.
  */
 function ding_reservation_update_reservations_form($form, $form_state, $account, $reservation_ids) {
+  
   global $user;
+  if($reservation_ids == "")
+  {
+      drupal_set_message(t('Du skal vælge minimum et materiale.'), 'error');
+      $html = theme('status_messages');
+      $form['confirm_text'] = array(
+         '#markup' => '<div>' . $html . '</div>',
+      );
+      
+      $form['button'] = array(
+        '#type' => 'submit',
+        '#value' => t('Ok'),
+        '#executes_submit_callback' => FALSE);
+      $form['button']['#attributes'] = array('onclick' => "jQuery(this).closest('.ui-dialog-content').dialog('close');event.preventDefault();return false;");
+      
+      return $form;
+  }
   $ids = array_map('rawurldecode', explode(',', $reservation_ids));
 
   $form_state['cache'] = TRUE;
@@ -717,6 +738,7 @@ function ding_reservation_delete_reservations_form_submit($form, &$form_state) {
 
 function ding_reservation_update_reservations_form_submit($form, &$form_state) {
   global $user;
+
   ding_provider_invoke('reservation', 'update', $user, $form_state['values']['reservations'], $form_state['values']['provider_options']);
 }
 
