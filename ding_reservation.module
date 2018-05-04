@@ -566,9 +566,10 @@ function ding_reservation_deletes_form_callback($form, &$form_state) {
     '#type' => 'ajax',
     '#commands' => array(),
   );
+  $refresh = TRUE;
   if($form_state['encoded_reservations'] == "")
   {
-      $refresh = false;
+      //$refresh = FALSE;
   }
   $html = theme('status_messages');
   $html .= drupal_render(drupal_get_form('ding_reservation_delete_reservations_form', $user, $form_state['encoded_reservations']));
@@ -588,10 +589,10 @@ function ding_reservation_updates_form_callback($form, &$form_state) {
     '#type' => 'ajax',
     '#commands' => array(),
   );
-  $refresh = true;
+  $refresh = TRUE;
   if($form_state['encoded_reservations'] == "")
   {
-      $refresh = false;
+      //$refresh = FALSE;
   }
   $html = theme('status_messages');
   $html .= drupal_render(drupal_get_form('ding_reservation_update_reservations_form', $user, $form_state['encoded_reservations']));
