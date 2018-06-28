@@ -832,6 +832,7 @@ function ding_reservation_default_options_branch($type, $name, $default, $option
 function ding_reservation_interest_period_selector($type, $name, $default, $options) {
   $create = ($type == 'create');
   $allowed_periods = ($create ? array() : array('' => t('No change'))) + $options;
+  
   /*
    * Add select none to use default in library system.
    */
@@ -840,7 +841,7 @@ function ding_reservation_interest_period_selector($type, $name, $default, $opti
   {
     $select_none = array('' => 'Vælg Periode');
     $allowed_periods = $select_none+ $allowed_periods;
-    $default = '';
+    $default = 180;
     $required = TRUE;
   }
 
